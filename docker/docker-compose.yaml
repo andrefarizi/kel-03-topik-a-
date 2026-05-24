@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: app_server
+    restart: unless-stopped
+    volumes:
+      - ./app:/var/www/html
+    networks:
+      - frontend
+      - backend
+
+  nginx:
+    image: nginx:alpine
+    container_name: reverse_proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./app:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      # Mount sertifikat SSL (nanti kita generate di dalam VM)
+      - ./nginx/server.crt:/etc/ssl/certs/server.crt
+      - ./nginx/server.key:/etc/ssl/private/server.key
+    networks:
+      - frontend
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: db_server
+    restart: unless-stopped
+    environment:
+      # Mengambil data dari file .env nantinya di VM
+      MYSQL_DATABASE: ${DB_DATABASE:-tubes_keamanan}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rahasia}
+      MYSQL_USER: ${DB_USERNAME:-root}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-rahasia}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend
+    # Port 3306 tidak diekspos ke host sesuai syarat keamanan
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true # Keamanan ekstra agar DB tidak bisa diakses dari luar
+
+volumes:
+  db_data:
