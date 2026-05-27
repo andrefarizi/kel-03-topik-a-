@@ -1,9 +1,7 @@
 -- db tubes
 USE tubes_keamanan;
 
--- ============================================================
--- TABEL USERS (Contoh tabel aplikasi)
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS users (
     id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     name        VARCHAR(255)    NOT NULL,
@@ -16,9 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
     INDEX idx_email (email)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================================
--- TABEL AUDIT LOG (Keamanan — mencatat aktivitas login)
--- ============================================================
+
 CREATE TABLE IF NOT EXISTS audit_logs (
     id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     user_id     BIGINT UNSIGNED,
@@ -33,9 +29,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ============================================================
--- DATA AWAL (Seed data)
--- ============================================================
+
 -- User defaultnya admmin
 INSERT IGNORE INTO users (name, email, password, role) VALUES
     ('Administrator', 'admin@kel03ksj.local', '$2y$12$placeholder_hash_ganti_ini', 'admin');
