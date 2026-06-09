@@ -2,8 +2,9 @@
 
 **Kelompok 03 | Topik A: Web App + Database + Reverse Proxy**  
 **Mata Kuliah:** Keamanan Server & Jaringan  
-**Server:** `100.110.137.96` | SSH Port: `2222`
+**Server:** `172.30.67.106` (Eduroam) / `100.110.137.96` (Tailscale) | SSH Port: `2222`
 
+> **Catatan Jaringan:** VM Server di-deploy di jaringan lokal kampus yang mengharuskan penggunaan koneksi Wi-Fi Eduroam (`172.30.67.106`). Untuk mempermudah akses remote, konfigurasi, dan pengujian dari jaringan luar kampus secara aman, kami mengimplementasikan VPN **Tailscale** (`100.110.137.96`). Kedua IP tersebut mengarah ke server yang sama dengan environment yang identik.
 
 ## 🏗️ Arsitektur Sistem
 
