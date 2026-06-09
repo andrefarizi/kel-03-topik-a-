@@ -210,7 +210,7 @@ Backup tersimpan di `/home/ubuntu/backups/` dan otomatis dihapus setelah 7 hari.
 
 ## 🎥 Video Demo
 
-> **Link Video:** [YouTube/Google Drive — *akan diisi setelah recording*]
+> **Link Video:** [Google Drive](https://drive.google.com/drive/folders/1PmBP27V_x76xFAErYr0DlkslZt4TAyHh?usp=sharing)
 
 Video menampilkan:
 - Output `docker ps`, `docker network ls`
