@@ -12,6 +12,9 @@ services:
     networks:
       - frontend
       - backend
+    depends_on:
+      db:
+        condition: service_healthy
 
   nginx:
     image: nginx:alpine
@@ -23,7 +26,6 @@ services:
     volumes:
       - ./app:/var/www/html
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      # Mount sertifikat SSL (nanti kita generate di dalam VM)
       - ./nginx/server.crt:/etc/ssl/certs/server.crt
       - ./nginx/server.key:/etc/ssl/private/server.key
     networks:
@@ -36,23 +38,28 @@ services:
     container_name: db_server
     restart: unless-stopped
     environment:
-      # Mengambil data dari file .env nantinya di VM
       MYSQL_DATABASE: ${DB_DATABASE:-tubes_keamanan}
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-rahasia}
-      MYSQL_USER: ${DB_USERNAME:-root}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rahasia_root}
+      MYSQL_USER: ${DB_USERNAME:-kel03user}
       MYSQL_PASSWORD: ${DB_PASSWORD:-rahasia}
     volumes:
       - db_data:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     networks:
       - backend
-    # Port 3306 tidak diekspos ke host sesuai syarat keamanan
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prahasia_root"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 networks:
   frontend:
     driver: bridge
   backend:
     driver: bridge
-    internal: true # Keamanan ekstra agar DB tidak bisa diakses dari luar
+    internal: true 
 
 volumes:
   db_data:
